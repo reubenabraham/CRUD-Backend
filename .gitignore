@@ -1,0 +1,7 @@
+.env
+.vscode
+.api_dev
+__pycache__/
+api_dev/
+app/__pycache__
+app/routers/__pycache__
