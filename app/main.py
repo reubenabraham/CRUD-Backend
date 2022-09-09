@@ -1,15 +1,19 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from .routers import post, user, auth, vote
 from . import models
 from .database import engine, SessionLocal
 from .config import settings
 
 
-models.database.Base.metadata.create_all(bind=engine)
+#We no longer need this as alembic creates all the tables and constraints for us
+#models.database.Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI()
-
+origins=["https://www.google.com"]
+app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 def get_db():
     db = SessionLocal()
