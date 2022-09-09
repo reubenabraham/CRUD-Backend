@@ -1,11 +1,11 @@
 from fastapi import Depends
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-import schemas, database, models
+from . import schemas, database, models
 from fastapi import Depends, status, HTTPException 
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from config import settings
+from .config import settings
 #Secret_Key
 #Algo HS256
 #Expiration Time for token - to decide how long a user should be logging in after they have.

@@ -2,10 +2,10 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
 from typing import List, Optional
+from sqlalchemy import func
 
-from app import oauth2
 from ..database import engine, SessionLocal
-from .. import models, schemas, oauth2
+from .. import models, oauth2, schemas
 
 def get_db():
     db = SessionLocal()
@@ -14,26 +14,25 @@ def get_db():
     finally:
         db.close()
 
-router = APIRouter(
+router = APIRouter( 
     prefix="/posts",
     tags=['Posts']
 )
 
-@router.get("/", response_model=List[schemas.Post])
+#@router.get("/", response_model=List[schemas.PostOut])
+@router.get("/")
 def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
-    # cursor.execute("""SELECT * FROM posts""")
-    # posts = cursor.fetchall()    
-    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
-    #Rather than sending back {"data":post}  directly send back posts
-    #FastAPI can directly serialise it before sending it back.
+       
+    #Picking up votes for each post. Joins in sqlalchemy are by default left inner join.
+    posts = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()    
     return posts
 
 #To fetch the id of a specific post
-@router.get("/{id}", response_model=schemas.Post)
+@router.get("/{id}")
 def get_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
 
     #Using a filter is the equivalent of using a WHERE clause    
-    post = db.query(models.Post).filter(models.Post.id == id).first()
+    post = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(models.Post.id == id).first()
 
     if not post: 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail= f"post with id {id} not found!")

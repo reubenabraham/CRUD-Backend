@@ -11,7 +11,8 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int
 
     class Config:
-        env_file = "../.env"
+        #This env file is searched from the root of the project folder it looks like, so no need for ../.env
+        env_file = ".env"
 
 
 settings = Settings()
