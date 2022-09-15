@@ -12,7 +12,10 @@ from .config import settings
 
 
 app = FastAPI()
-origins=["https://www.google.com"]
+#Here, provide the list of domains/urls that can talk to your API
+#To let everyone talk to your web-app -
+origins=["*"] 
+#origins=["https://www.google.com"]
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 def get_db():
@@ -27,3 +30,7 @@ app.include_router(post.router)
 app.include_router(user.router)
 app.include_router(auth.router)
 app.include_router(vote.router)
+
+@app.get("/")
+def root():
+    return {"message":"Welcome to Mock-Strava! go to /docs route to use the Swagger."}

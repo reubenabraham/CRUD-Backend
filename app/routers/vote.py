@@ -2,14 +2,16 @@ from operator import mod
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
 from .. import schemas, database, models, oauth2
-from ..database import engine, SessionLocal
+from ..database import engine, SessionLocal, get_db
 
+'''
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+'''
 
 router = APIRouter(
     prefix="/vote",
