@@ -12,11 +12,6 @@ from app.database import SessionLocal, get_db
 from app.oauth2 import create_access_token
 from app import models
 
-
-#'postgresql://postgres:postgres@localhost/fastapi'
-# f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}/{settings.database_name}'
-#SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:password123@localhost:5432/fastapi_test'
-
 #This is slightly changed to reflect a test-db - look at the end of the URL
 SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}/{settings.database_name}_test'
 
@@ -60,7 +55,6 @@ def test_user(client):
     return new_user
 
 
-
 @pytest.fixture
 def test_user_2(client):
     user_data = {"email":"reuben_test_2@gmail.com", "password":"password1234"}
@@ -70,8 +64,6 @@ def test_user_2(client):
     new_user['password'] = user_data['password']
     return new_user
 
-
-#----------- Fixtures for Post Testing ----------
 
 #For testing posts, we need to be authenticated, so we have this fixture to do that for us.
 @pytest.fixture

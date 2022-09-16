@@ -37,4 +37,3 @@ def test_login_user(client, test_user):
 def test_incorrect_login(client, test_user, email, password, status_code):
     res = client.post("/login", data = {"username":email, "password":password})    
     assert res.status_code == status_code
-    
