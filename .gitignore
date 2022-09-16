@@ -5,3 +5,4 @@ __pycache__/
 api_dev/
 app/__pycache__
 app/routers/__pycache__
+.DS_Store
